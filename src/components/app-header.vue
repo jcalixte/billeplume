@@ -3,9 +3,8 @@
     <div class="user menu">
       <user></user>
     </div>
-    <router-link :to="{ name: 'writer'}">
-      <img src="../assets/logo.png" class="logo" alt="Billet Inspiration">
-    </router-link>
+    <img src="../assets/logo.png" class="logo" alt="Billet Inspiration">
+    <loading></loading>
     <div class="context-option menu">
       <context-option></context-option>
     </div>
@@ -15,12 +14,14 @@
 <script>
   import user from './user'
   import contextOption from './context-option'
+  import loading from './loading'
 
   export default {
     name: 'app-header',
     components: {
       user,
-      contextOption
+      contextOption,
+      loading
     }
   }
 </script>
@@ -51,6 +52,8 @@
     .logo {
       vertical-align: middle;
     }
+
+    @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
     .user {
       float: left;

@@ -10,7 +10,7 @@
         <div v-if="posts && posts.length" class="post-container">
           <h3>Billets</h3>
           <router-link class="dropdown-item post" v-for="(post, key) in posts" v-if="post && key < 3" :key="post.id"
-                       :to="{ name: 'write', params: { id: post.id }}">
+                       :to="{ name: 'writer', params: { id: post.id }}">
             {{ post.title }}
           </router-link>
           <router-link :to="{ name: 'posts'}" class="dropdown-item" v-if="posts && posts.length > maxItem">

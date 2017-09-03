@@ -46,11 +46,11 @@ class PostService {
     }
   }
 
-  async sync (uid) {
+  async sync (uid, postsInStore) {
     try {
       let snapshot = await api.database.ref(`user-posts/${uid}`).orderByValue().once('value')
       let postsDb = snapshot.val()
-      let posts = Object.values(postsDb)
+      let posts = await this.synchronize(Object.values(postsDb), postsInStore)
       if (!posts) {
         return []
       }
@@ -59,6 +59,25 @@ class PostService {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  async synchronize (postsInDb, posts) {
+    let postsSync = []
+
+    for (let i in posts) {
+      let postDb = postsInDb.find(p => p.id === posts[i].id)
+      if (postDb) {
+        postsSync.push(posts[i].date > postDb.date ? posts[i] : postDb)
+      } else {
+        try {
+          await this.save(posts[i].id, posts[i].uid, posts[i].title, posts[i].content)
+          postsSync.push(posts[i])
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+    return postsSync
   }
 }
 

@@ -17,11 +17,11 @@
   export default {
     name: 'hello',
     props: {
-      postId: { type: Number, required: true }
+      id: { type: String, required: true }
     },
     mounted () {
-      if (this.postId) { 
-        this.setCurrentPostId(this.postId)
+      if (this.id) {
+        this.setCurrentPostId(this.id)
       }
     },
     methods: {
