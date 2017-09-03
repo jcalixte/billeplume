@@ -64,24 +64,28 @@ class PostService {
   async synchronize (postsDb, posts) {
     let postsSync = []
 
-    for (let i in posts) {
-      let postDb = postsDb.find(p => p.id === posts[i].id)
-      if (postDb) {
-        postsSync.push(posts[i].date > postDb.date ? posts[i] : postDb)
-      } else {
-        try {
-          await this.save(posts[i].id, posts[i].uid, posts[i].title, posts[i].content)
-          postsSync.push(posts[i])
-        } catch (error) {
-          console.log(error)
+    if (posts && posts.length) {
+      for (let i in posts) {
+        let postDb = postsDb.find(p => p.id === posts[i].id)
+        if (postDb) {
+          postsSync.push(posts[i].date > postDb.date ? posts[i] : postDb)
+        } else {
+          try {
+            await this.save(posts[i].id, posts[i].uid, posts[i].title, posts[i].content)
+            postsSync.push(posts[i])
+          } catch (error) {
+            console.log(error)
+          }
         }
       }
     }
 
-    for (let i in postsDb) {
-      let postStore = postsDb.find(p => p.id === postsDb[i].id)
-      if (!postStore) {
-        postsSync.push(postsDb[i])
+    if (postsDb && postsDb.length) {
+      for (let i in postsDb) {
+        let postStore = posts.find(p => p.id === postsDb[i].id)
+        if (!postStore) {
+          postsSync.push(postsDb[i])
+        }
       }
     }
 
