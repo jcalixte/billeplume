@@ -8,7 +8,7 @@
         </ul>
         <hr>
       </div>
-      <router-link :to="{ name: 'writer', params: { id: posts[0].id }}" class="button is-primary">Écrire</router-link>
+      <router-link v-if="posts[0]" :to="{ name: 'writer', params: { id: posts[0].id }}" class="button is-primary">Écrire</router-link>
     </div>
     <div v-else>
       <router-link :to="{ name: 'login'}" class="button">Se connecter / S'inscrire</router-link>
