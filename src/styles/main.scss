@@ -1,0 +1,26 @@
+html {
+  overflow-y: initial;
+}
+
+.input,
+.textarea {
+  border-radius: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nova Mono', monospace;
+}
+
+main {
+  text-align: center;
+}
+
+@media screen and (min-width: 1068px) {
+  .container {
+    &.is-fluid {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
