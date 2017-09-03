@@ -9,10 +9,10 @@
       <div class="dropdown-content" @click="hide">
         <div v-if="posts && posts.length" class="post-container">
           <h3>Billets</h3>
-          <a href="#" v-for="(post, key) in posts" v-if="post && key < 3" :key="post.id"
-            class="dropdown-item post" @click.prevent="setCurrentPost(post.id)">
+          <router-link class="dropdown-item post" v-for="(post, key) in posts" v-if="post && key < 3" :key="post.id"
+                       :to="{ name: 'write', params: { id: post.id }}">
             {{ post.title }}
-          </a>
+          </router-link>
           <router-link :to="{ name: 'posts'}" class="dropdown-item" v-if="posts && posts.length > maxItem">
             Tous les billets
           </router-link>

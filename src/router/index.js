@@ -11,8 +11,9 @@ export default new Router({
     name: 'home',
     component: home
   }, {
-    path: '/write',
+    path: '/write/:id',
     name: 'writer',
+    props: true,
     component: resolve => require(['@/components/writer'], resolve)
   }, {
     path: '/login',
