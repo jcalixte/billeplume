@@ -43,8 +43,8 @@
         }
       },
       deletePost () {
-        if (this.user && this.user.uid && this.currentPost) {
-          this.removePost({ uid: this.user.uid, id: this.currentPost.id })
+        if (this.user && this.user.uid && this.currentPostId) {
+          this.removePost({ uid: this.user.uid, id: this.currentPostId })
         }
       },
       async share () {
@@ -67,7 +67,7 @@
       }
     },
     computed: {
-      ...mapGetters(['user', 'currentPost'])
+      ...mapGetters(['user', 'currentPostId'])
     }
   }
 </script>

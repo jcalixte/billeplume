@@ -23,7 +23,7 @@
     methods: {
       submitted () {
         if (this.user) {
-          this.$router.push('write')
+          this.$router.push('writer')
         }
       }
     },

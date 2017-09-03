@@ -1,3 +1,5 @@
+@import './constants';
+
 html {
   overflow-y: initial;
 }
@@ -14,6 +16,25 @@ body {
 
 main {
   text-align: center;
+}
+
+a {
+  color: $dark-primary;
+
+  &:hover {
+    color: $dark-primary;
+  }
+}
+
+.button {
+  &.is-primary {
+    background-color: $primary;
+    color: $dark-text;
+
+    &:hover {
+      background-color: $dark-primary;
+    }
+  }
 }
 
 @media screen and (min-width: 1068px) {

@@ -32,7 +32,7 @@
     margin: auto;
     top: 3px;
     left: calc(50% - 25px);
-    animation: spin 1s linear infinite;
+    animation: spin 3s linear infinite;
     visibility: hidden;
     
     &.visible {

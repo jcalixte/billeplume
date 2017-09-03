@@ -46,7 +46,13 @@ const actions = {
   },
   async updatePost ({ commit }, post) {
     if (post) {
-      let postUpdated = await postService.save(post.id, post.uid, post.title, post.content)
+      let postUpdated = post
+      postUpdated.date = Date.now()
+      try {
+        postUpdated = await postService.save(post.id, post.uid, post.title, post.content, postUpdated.date)
+      } catch (error) {
+        console.log(error)
+      }
       commit(types.UPDATE_POST, { post: postUpdated })
     }
   },

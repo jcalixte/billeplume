@@ -15,7 +15,7 @@
     <!-- Hero footer: will stick at the bottom -->
     <div class="hero-foot">
       Fabriqué par Julien Calixte
-      <router-link :to="{ name: 'about'}" class="button">À propos</router-link>
+      <router-link :to="{ name: 'about'}">À propos</router-link>
     </div>
   </section>
 </template>
@@ -33,8 +33,9 @@
 
 <style lang="scss">
   @import "~bulma";
-  @import "./styles/main";
+  @import "~notyf/dist/notyf.min";
   @import "./styles/constants";
+  @import "./styles/main";
   @import './assets/icons/flaticon.css';
 
   #app {

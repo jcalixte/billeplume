@@ -22,14 +22,14 @@ class PostService {
     }
   }
 
-  async save (id, uid, title, content) {
+  async save (id, uid, title, content, date = Date.now()) {
     try {
       let post = {
         id: id,
         title: title,
         uid: uid,
         content: content,
-        date: Date.now()
+        date: date
       }
       await api.database.ref(`user-posts/${uid}/${id}`).set(post)
       return post
@@ -61,11 +61,11 @@ class PostService {
     }
   }
 
-  async synchronize (postsInDb, posts) {
+  async synchronize (postsDb, posts) {
     let postsSync = []
 
     for (let i in posts) {
-      let postDb = postsInDb.find(p => p.id === posts[i].id)
+      let postDb = postsDb.find(p => p.id === posts[i].id)
       if (postDb) {
         postsSync.push(posts[i].date > postDb.date ? posts[i] : postDb)
       } else {
@@ -77,6 +77,14 @@ class PostService {
         }
       }
     }
+
+    for (let i in postsDb) {
+      let postStore = postsDb.find(p => p.id === postsDb[i].id)
+      if (!postStore) {
+        postsSync.push(postsDb[i])
+      }
+    }
+
     return postsSync
   }
 }
