@@ -1,5 +1,4 @@
 @import './constants';
-
 html {
   overflow-y: initial;
 }
@@ -10,8 +9,23 @@ html {
 }
 
 body {
-  margin: 0;
   font-family: 'Nova Mono', monospace;
+  margin: 0;
+}
+
+.notyf {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  .notyf__toast {
+    color: $dark-text;
+    &.notyf--confirm {
+      background-color: $primary;
+    }
+    &.notyf--alert {
+      background-color: $warning;
+    }
+  }
 }
 
 main {
@@ -20,7 +34,6 @@ main {
 
 a {
   color: $dark-primary;
-
   &:hover {
     color: $dark-primary;
   }
@@ -30,7 +43,6 @@ a {
   &.is-primary {
     background-color: $primary;
     color: $dark-text;
-
     &:hover {
       background-color: $dark-primary;
     }
@@ -43,5 +55,27 @@ a {
       margin-left: 0;
       margin-right: 0;
     }
+  }
+}
+
+@keyframes a {
+  0% {
+    bottom: -15px;
+    margin-top: 0;
+    max-height: 0;
+    max-width: 0;
+    opacity: 0;
+  }
+
+  30% {
+    bottom: -3px;
+    opacity: .8;
+  }
+
+  100% {
+    bottom: 0;
+    margin-top: 12px;
+    max-height: 200px;
+    opacity: 1;
   }
 }

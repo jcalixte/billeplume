@@ -6,9 +6,16 @@
       </button>
     </div>
     <div class="dropdown-menu" id="dropdown-menu" role="menu" v-if="user">
-      <div class="dropdown-content" @click="hide">
-        <a href="#" class="dropdown-item" @click.prevent="addPost">Nouveau billet</a>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" @click.prevent="newPost">Nouveau billet</a>
         <a href="#" class="dropdown-item" @click.prevent="deletePost">Supprimer le billet actuel</a>
+        
+        <div class="select is-info">
+          <select id="background" name="background" v-model="background">
+            <option v-for="bg in backgrounds" :key="bg.name" :value="bg.name">{{ bg.name }}</option>
+          </select>
+        </div>
+
         <div v-if="sharable">
           <hr class="dropdown-divider">
           <a href="#" class="dropdown-item" @click.prevent="share">Partager</a>
@@ -20,6 +27,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
+  import { default as bus, LOADING, FINISHED } from '@/utils/bus-event'
 
   export default {
     name: 'context-option',
@@ -30,16 +38,19 @@
       }
     },
     methods: {
-      ...mapActions(['newPost', 'removePost']),
+      ...mapActions(['addPost', 'removePost', 'saveBackGround', 'saveFont', 'saveMusic']),
       toggle () {
         this.dropdownActive = !this.dropdownActive
       },
       hide () {
         this.dropdownActive = false
       },
-      addPost () {
+      async newPost () {
         if (this.user && this.user.uid) {
-          this.newPost(this.user.uid)
+          bus.$emit(LOADING, 'adding-post')
+          let post = await this.addPost(this.user.uid)
+          this.$router.push({ name: 'writer', params: { id: post.id } })
+          bus.$emit(FINISHED, 'adding-post')
         }
       },
       deletePost () {
@@ -57,7 +68,7 @@
           try {
             await navigator.share({
               title: 'Bille Plume',
-              text: 'Notez avec l\'inspiration',
+              text: 'Notez avec inspiration',
               url: url
             })
           } catch (err) {
@@ -67,7 +78,15 @@
       }
     },
     computed: {
-      ...mapGetters(['user', 'currentPostId'])
+      ...mapGetters(['user', 'preference', 'currentPostId', 'backgrounds']),
+      background: {
+        get () {
+          return this.preference.background
+        },
+        set (val) {
+          this.saveBackGround(val)
+        }
+      }
     }
   }
 </script>

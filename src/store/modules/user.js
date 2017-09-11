@@ -1,12 +1,22 @@
-import { SYNC_USER, CLEAR_USER } from '../mutation-types'
+import { SYNC_USER, CLEAR_USER, SAVE_BACKGROUND, SAVE_FONT, SAVE_MUSIC } from '../mutation-types'
 import userService from '@/api/userService'
 
 const state = {
-  user: null
+  user: null,
+  background: null,
+  font: null,
+  music: null
 }
 
 const getters = {
-  user: state => state.user
+  user: state => state.user,
+  preference: state => {
+    return {
+      background: state.background,
+      font: state.font,
+      music: state.music
+    }
+  }
 }
 
 const actions = {
@@ -24,6 +34,15 @@ const actions = {
       await userService.logout()
       commit(CLEAR_USER)
     }
+  },
+  saveBackGround ({ commit }, background) {
+    commit(SAVE_BACKGROUND, { background })
+  },
+  saveFont ({ commit }, font) {
+    commit(SAVE_FONT, { font })
+  },
+  saveMusic ({ commit }, music) {
+    commit(SAVE_MUSIC, { music })
   }
 }
 
@@ -38,6 +57,15 @@ const mutations = {
     if (state.user) {
       state.user = null
     }
+  },
+  [SAVE_BACKGROUND] (state, { background }) {
+    state.background = background
+  },
+  [SAVE_FONT] (state, { font }) {
+    state.font = font
+  },
+  [SAVE_MUSIC] (state, { music }) {
+    state.music = music
   }
 }
 

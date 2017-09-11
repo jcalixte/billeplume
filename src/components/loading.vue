@@ -1,5 +1,5 @@
 <template>
-  <img src="../assets/loading.png" class="loading" :class="{ visible: !!counter }" alt="Chargement...">
+  <img src="../assets/loading.png" class="loading" :class="{ visible: visible }" alt="Chargement...">
 </template>
 
 <script>
@@ -9,24 +9,48 @@
     name: 'loading',
     data () {
       return {
-        counter: 0
+        counter: {},
+        visible: false
       }
     },
     created () {
       bus.$on(LOADING, (k) => {
-        this.counter++
+        if (!(k in this.counter)) {
+          this.counter[k] = 0
+        }
+        this.counter[k]++
+        this.manageVisibility()
       })
       bus.$on(FINISHED, (k) => {
-        this.counter--
-        if (this.counter < 0) {
-          this.counter = 0
+        if (k in this.counter) {
+          this.counter[k]--
+          if (this.counter[k] < 0) {
+            this.counter[k] = 0
+          }
         }
+        this.manageVisibility()
       })
+    },
+    methods: {
+      manageVisibility () {
+        let i = 0
+        for (let k in this.counter) {
+          i += this.counter[k]
+        }
+        this.visible = !!i
+      }
     }
   }
 </script>
 
 <style lang='scss' scoped>
+  @keyframes spin { 
+    100% { 
+      -webkit-transform: rotate(360deg);
+      transform:rotate(360deg);
+    }
+  }
+  
   .loading {
     position: absolute;
     margin: auto;
@@ -34,9 +58,12 @@
     left: calc(50% - 25px);
     animation: spin 3s linear infinite;
     visibility: hidden;
+    opacity: 0;
+    transition: opacity .5s;
     
     &.visible {
       visibility: visible;
+      opacity: 1;
     }
   }
 </style>

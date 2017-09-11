@@ -15,49 +15,55 @@
   import debounce from 'lodash/debounce'
 
   export default {
-    name: 'hello',
+    name: 'writer',
     props: {
       id: { type: String, required: true }
     },
-    mounted () {
-      if (this.id) {
-        this.setCurrentPostId(this.id)
+    data () {
+      return {
+        localId: null
       }
     },
+    mounted () {
+      this.localId = this.id
+    },
     methods: {
-      ...mapActions(['syncPosts', 'updatePost', 'setCurrentPostId']),
+      ...mapActions(['syncPosts', 'updatePost', 'setCurrentPostId', 'resetCurrentPost']),
       saveTitle: debounce(function (title) {
-        if (this.id) {
+        if (this.localId) {
           this.updatePost({
-            id: this.id,
+            id: this.localId,
             uid: this.user.uid,
             title: title,
             content: this.content
           })
         }
-      }, 500),
+      }, 3000),
       saveContent: debounce(function (content) {
-        if (this.id) {
+        if (this.localId) {
           this.updatePost({
-            id: this.id,
+            id: this.localId,
             uid: this.user.uid,
             title: this.title,
             content: content
           })
         }
-      }, 500)
+      }, 3000)
     },
     computed: {
-      ...mapGetters(['user', 'posts']),
+      ...mapGetters(['user', 'posts', 'currentPostId']),
       post () {
-        return this.posts.find(p => p.id === this.id)
+        return this.posts.find(p => p.id === this.localId)
       },
       title: {
         get () {
+          if (this.localId && this.currentPostId !== this.localId) {
+            this.setCurrentPostId(this.localId)
+          }
           return this.post ? this.post.title : null
         },
         set (val) {
-          if (this.id) {
+          if (this.localId) {
             this.saveTitle(val)
           }
         }
@@ -67,11 +73,23 @@
           return this.post ? this.post.content : null
         },
         set (val) {
-          if (this.id) {
+          if (this.localId) {
             this.saveContent(val)
           }
         }
       }
+    },
+    beforeRouteUpdate (to, from, next) {
+      if (this.id) {
+        this.localId = this.id
+        this.setCurrentPostId(this.localId)
+      }
+      next()
+    },
+    beforeRouteLeave (to, from, next) {
+      this.localId = null
+      this.resetCurrentPost()
+      next()
     }
   }
 </script>
@@ -88,6 +106,7 @@
   }
   
   input {
+    color: inherit;
     display: inline-block;
     text-align: center;
     margin-bottom: 15px;
@@ -95,12 +114,14 @@
     &.title-post {
       border: none;
       border-bottom: 1px solid rgba(0,0,0,.12);
+      background-color: transparent;
     }
   }
   
   textarea {
     border: none;
-    background-color: rgba($primary, .1);
+    background-color: transparent;
+    color: inherit;
     font-family: 'Montserrat Alternates', sans-serif;
     margin-top: 15px;
   }

@@ -1,7 +1,7 @@
 <template>
-  <header>
+  <header :class="{ writing: !!currentPostId }">
     <div class="user menu">
-      <user></user>
+      <context-user></context-user>
     </div>
     <img src="../assets/logo.png" class="logo" alt="Billet Inspiration">
     <loading></loading>
@@ -12,16 +12,20 @@
 </template>
 
 <script>
-  import user from './user'
+  import { mapGetters } from 'vuex'
+  import contextUser from './context-user'
   import contextOption from './context-option'
   import loading from './loading'
 
   export default {
     name: 'app-header',
     components: {
-      user,
+      contextUser,
       contextOption,
       loading
+    },
+    computed: {
+      ...mapGetters(['currentPostId'])
     }
   }
 </script>
@@ -34,8 +38,20 @@
     height: 56px;
     padding: 0 16px 0 24px;
     background-color: $primary;
-    color: #000000;
     text-align: center;
+    transition: background-color 1s ease-in-out;
+
+    &.writing {
+      background-color: $primary-transparent;
+    }
+
+    .button {
+      color: inherit;
+
+      &:active, &:hover, &:visited, &:focus {
+        color: inherit;
+      }
+    }
 
     .menu {
       height: 56px;
@@ -53,14 +69,16 @@
       vertical-align: middle;
     }
 
-    @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-
     .user {
-      float: left;
+      position: absolute;
+      top: 0;
+      left: 15px;
     }
 
     .context-option {
-      float: right;
+      position: absolute;
+      top: 0;
+      right: 15px;
     }
     
     [class^="flaticon-"]:before {

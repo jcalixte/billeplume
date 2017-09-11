@@ -38,7 +38,7 @@
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
-    name: 'user',
+    name: 'context-user',
     data () {
       return {
         dropdownActive: false,

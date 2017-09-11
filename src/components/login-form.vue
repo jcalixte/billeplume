@@ -6,7 +6,7 @@
           <label class="label" for="email">Email</label>
         </div>
         <div class="field-body control">
-          <input type="text" id="email" name="email" class="input" v-model="email" placeholder="email">
+          <input type="email" id="email" name="email" class="input" v-model="email" placeholder="email">
         </div>
       </div>
       <div class="field is-horizontal">

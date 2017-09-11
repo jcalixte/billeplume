@@ -34,30 +34,41 @@ const actions = {
       date: Date.now()
     }
     commit(types.ADD_POST, { post })
+    return post
   },
-  async addPost ({ commit }, post) {
+  async addPost ({ commit }, uid) {
+    let post = {
+      uid: uid,
+      title: '',
+      content: '',
+      date: Date.now()
+    }
     let postKey = await postService.add(post.uid, post.title, post.content)
     post.id = postKey
     commit(types.ADD_POST, { post })
+    return post
   },
   async removePost ({ commit }, { uid, id }) {
     await postService.remove(uid, id)
     commit(types.REMOVE_POST, { id })
   },
-  async updatePost ({ commit }, post) {
+  updatePost ({ commit }, post) {
     if (post) {
       let postUpdated = post
       postUpdated.date = Date.now()
       try {
-        postUpdated = await postService.save(post.id, post.uid, post.title, post.content, postUpdated.date)
+        postService.save(post.id, post.uid, post.title, post.content, postUpdated.date)
       } catch (error) {
         console.log(error)
       }
       commit(types.UPDATE_POST, { post: postUpdated })
     }
   },
-  setCurrentPostId ({ commit, state }, id) {
+  setCurrentPostId ({ commit }, id) {
     commit(types.SET_CURRENT_POST_ID, { id })
+  },
+  resetCurrentPost ({ commit }) {
+    commit(types.RESET_CURRENT_POST)
   },
   resetPost ({ commit }) {
     commit(types.RESET_POST)
@@ -105,6 +116,9 @@ const mutations = {
     if (post) {
       state.currentPostId = id
     }
+  },
+  [types.RESET_CURRENT_POST] (state) {
+    state.currentPostId = null
   },
   [types.RESET_POST] (state) {
     state.currentPostId = null

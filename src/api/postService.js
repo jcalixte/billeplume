@@ -1,8 +1,10 @@
 import api from './'
+import { default as bus, LOADING, FINISHED } from '@/utils/bus-event'
 
 class PostService {
-  async add (uid, title = '', content = '') {
+  async add (uid, title = '', content = '', date = Date.now()) {
     try {
+      bus.$emit(LOADING, 'add-post')
       if (!uid) {
         console.error('ui non défini')
         return
@@ -14,8 +16,9 @@ class PostService {
         title: title,
         uid: uid,
         content: content,
-        date: Date.now()
+        date: date
       })
+      bus.$emit(FINISHED, 'add-post')
       return key
     } catch (error) {
       console.error(error)
@@ -24,6 +27,7 @@ class PostService {
 
   async save (id, uid, title, content, date = Date.now()) {
     try {
+      bus.$emit(LOADING, 'save-post')
       let post = {
         id: id,
         title: title,
@@ -31,7 +35,15 @@ class PostService {
         content: content,
         date: date
       }
-      await api.database.ref(`user-posts/${uid}/${id}`).set(post)
+      let snapshot = await api.database.ref(`user-posts/${uid}/${id}`).once('value')
+      let postInDb = snapshot.val()
+      if (!postInDb) {
+        let key = await this.add(post.uid, post.title, post.content, post.date)
+        post.id = key
+      } else if (postInDb.date < post.date) {
+        await api.database.ref(`user-posts/${uid}/${id}`).set(post)
+      }
+      bus.$emit(FINISHED, 'save-post')
       return post
     } catch (error) {
       console.error(error)
@@ -40,7 +52,9 @@ class PostService {
 
   async remove (uid, id) {
     try {
+      bus.$emit(LOADING, 'remove-post')
       await api.database.ref(`user-posts/${uid}/${id}`).remove()
+      bus.$emit(FINISHED, 'remove-post')
     } catch (error) {
       console.error(error)
     }
@@ -48,6 +62,7 @@ class PostService {
 
   async sync (uid, postsInStore) {
     try {
+      bus.$emit(LOADING, 'sync-post')
       let snapshot = await api.database.ref(`user-posts/${uid}`).orderByValue().once('value')
       let postsDb = snapshot.val()
       let posts = await this.synchronize(Object.values(postsDb), postsInStore)
@@ -55,6 +70,7 @@ class PostService {
         return []
       }
       posts.sort((a, b) => a.date < b.date)
+      bus.$emit(FINISHED, 'sync-post')
       return posts
     } catch (error) {
       console.error(error)
