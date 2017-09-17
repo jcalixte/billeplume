@@ -1,12 +1,16 @@
 <template>
-  <img src="../assets/loading.png" class="loading" :class="{ visible: visible }" alt="Chargement...">
+  <spinner :depth="1" :size="50" class="loading" color="#01a3a2" :class="{ visible }"></spinner>
 </template>
 
 <script>
+  import spinner from './spinner'
   import { default as bus, LOADING, FINISHED } from '@/utils/bus-event'
 
   export default {
     name: 'loading',
+    components: {
+      spinner
+    },
     data () {
       return {
         counter: {},
@@ -44,13 +48,6 @@
 </script>
 
 <style lang='scss' scoped>
-  @keyframes spin { 
-    100% { 
-      -webkit-transform: rotate(360deg);
-      transform:rotate(360deg);
-    }
-  }
-  
   .loading {
     position: absolute;
     margin: auto;

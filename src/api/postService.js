@@ -21,6 +21,7 @@ class PostService {
       bus.$emit(FINISHED, 'add-post')
       return key
     } catch (error) {
+      bus.$emit(FINISHED, 'add-post')
       console.error(error)
     }
   }
@@ -46,6 +47,7 @@ class PostService {
       bus.$emit(FINISHED, 'save-post')
       return post
     } catch (error) {
+      bus.$emit(FINISHED, 'save-post')
       console.error(error)
     }
   }
@@ -56,6 +58,7 @@ class PostService {
       await api.database.ref(`user-posts/${uid}/${id}`).remove()
       bus.$emit(FINISHED, 'remove-post')
     } catch (error) {
+      bus.$emit(LOADING, 'remove-post')
       console.error(error)
     }
   }
@@ -73,6 +76,7 @@ class PostService {
       bus.$emit(FINISHED, 'sync-post')
       return posts
     } catch (error) {
+      bus.$emit(FINISHED, 'sync-post')
       console.error(error)
     }
   }
