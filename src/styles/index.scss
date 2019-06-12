@@ -1,0 +1,55 @@
+// sass-lint:disable indentation, no-url-domains, no-url-protocols, final-newline
+@import './reset';
+@import './variables';
+@import url('https://fonts.googleapis.com/css?family=Baloo|Alegreya|Quicksand|Source+Code+Pro:300|Courgette');
+
+html {
+  color: $dark-text-color;
+  font-family: Quicksand,
+    'Segoe UI Light',
+    Helvetica,
+    Arial,
+    sans-serif;
+  min-height: 100vh;
+  text-align: center;
+}
+
+button {
+  background-color: transparent;
+  border: .15rem solid $primary;
+  padding: 5px;
+
+  &:hover {
+    background-color: $primary;
+    cursor: pointer;
+  }
+
+  &.is-main {
+    background-color: $primary;
+
+    &:hover {
+      background-color: darken($primary, 20%);
+      border-color: darken($primary, 20%);
+      color: $light-text-color;
+    }
+
+    &:active {
+      background-color: darken($primary, 40%);
+      border-color: darken($primary, 40%);
+    }
+  }
+
+  &:active {
+    background-color: darken($primary, 20%);
+    border-color: darken($primary, 20%);
+    color: $light-text-color;
+    cursor: pointer;
+  }
+}
+
+img {
+  &.icon {
+    height: auto;
+    width: 40px;
+  }
+}
